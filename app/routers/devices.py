@@ -9,7 +9,9 @@ This module provides routes for devices.
 from .. import db
 from ..auth import get_current_username
 
+from io import BytesIO
 from fastapi import APIRouter, Depends
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from tinydb import Query
 
@@ -142,3 +144,28 @@ def delete_devices_id(device_id: int, username: str = Depends(get_current_userna
   query_device(device_id, username)
   db.remove(doc_ids=[device_id])
   return dict()
+
+
+@router.get("/devices/{device_id}/report")
+def get_devices_id_report(device_id: int, username: str = Depends(get_current_username)):
+  """
+  Prints a text-based report for a device owned by the user.
+  Requires authentication.
+  """
+
+  device = query_device(device_id, username)
+
+  report = BytesIO()
+  report.write(bytes(f'ID: {device_id}\n', 'ascii'))
+  report.write(bytes(f'Name: {device["name"]}\n', 'ascii'))
+  report.write(bytes(f'Location: {device["location"]}\n', 'ascii'))
+  report.write(bytes(f'Type: {device["type"]}\n', 'ascii'))
+  report.write(bytes(f'Model: {device["model"]}\n', 'ascii'))
+  report.write(bytes(f'Serial Number: {device["serial_number"]}\n', 'ascii'))
+  report.write(bytes(f'Owner: {device["owner"]}\n', 'ascii'))
+  report.seek(0)
+
+  response = StreamingResponse(report, media_type='text/plain')
+  content_disposition = f"attachment; filename*=utf-8''{device['name']}.txt"
+  response.headers.setdefault("content-disposition", content_disposition)
+  return response
