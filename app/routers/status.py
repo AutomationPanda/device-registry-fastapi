@@ -24,6 +24,7 @@ router = APIRouter()
 # --------------------------------------------------------------------------------
 
 @router.get("/status")
+@router.head("/status")
 def get_status():
   """
   Provides uptime information about the web service.

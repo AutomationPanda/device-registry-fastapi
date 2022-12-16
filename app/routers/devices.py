@@ -45,6 +45,7 @@ class DevicePatch(BaseModel):
 # --------------------------------------------------------------------------------
 
 @router.get("/devices", response_model=list[Device])
+@router.head("/devices")
 def get_devices():
   """
   Gets a list of all devices owned by the user.
@@ -65,6 +66,7 @@ def post_devices(device: Device):
 
 
 @router.get("/devices/{device_id}", response_model=Device)
+@router.head("/devices/{device_id}")
 def get_devices_id(device_id: int):
   """
   Gets a device owned by the user.
