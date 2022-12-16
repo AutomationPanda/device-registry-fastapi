@@ -1,34 +1,31 @@
 """
-This module is the main module for the FastAPI app.
+This module provides routes for status.
 """
 
 # --------------------------------------------------------------------------------
 # Imports
 # --------------------------------------------------------------------------------
 
-from fastapi import FastAPI
-from fastapi.responses import FileResponse, RedirectResponse
+import time
 
-from .routers import status
-
-
-# --------------------------------------------------------------------------------
-# App Creation
-# --------------------------------------------------------------------------------
-
-app = FastAPI()
-app.include_router(status.router)
+from . import START_TIME
+from fastapi import APIRouter
 
 
 # --------------------------------------------------------------------------------
-# Top-Level Routes
+# Router
 # --------------------------------------------------------------------------------
 
-@app.get("/favicon.ico", include_in_schema=False)
-def get_favicon():
-  return FileResponse('app/favicon.ico')
+router = APIRouter()
 
 
-@app.get("/")
-def get_root():
-  return RedirectResponse("/docs")
+# --------------------------------------------------------------------------------
+# Routes
+# --------------------------------------------------------------------------------
+
+@router.get("/status")
+def get_status():
+  return {
+    'online': True,
+    'uptime': round(time.time() - START_TIME, 3)
+  }
