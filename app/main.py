@@ -8,6 +8,7 @@ This module is the main module for the FastAPI app.
 
 from fastapi import FastAPI
 from fastapi.responses import FileResponse, RedirectResponse
+from fastapi.middleware.cors import CORSMiddleware
 
 from .routers import devices, status
 
@@ -19,6 +20,14 @@ from .routers import devices, status
 app = FastAPI()
 app.include_router(devices.router)
 app.include_router(status.router)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=['*'],
+    allow_headers=["*"],
+)
 
 
 # --------------------------------------------------------------------------------
