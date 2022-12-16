@@ -25,6 +25,10 @@ router = APIRouter()
 
 @router.get("/status")
 def get_status():
+  """
+  Provides uptime information about the web service.
+  """
+  
   return {
     'online': True,
     'uptime': round(time.time() - START_TIME, 3)
