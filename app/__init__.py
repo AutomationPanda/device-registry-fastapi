@@ -15,6 +15,7 @@ from tinydb import TinyDB
 # Globals
 # --------------------------------------------------------------------------------
 
+secret_key = 'Pandas are awesome!'
 start_time = time.time()
 
 db = TinyDB('registry.json')
