@@ -1,12 +1,17 @@
 import time
 
 from fastapi import FastAPI
-from starlette.responses import RedirectResponse
+from fastapi.responses import FileResponse, RedirectResponse
 
 
 START_TIME = time.time()
 
 app = FastAPI()
+
+
+@app.get("/favicon.ico", include_in_schema=False)
+def get_favicon():
+  return FileResponse('app/favicon.ico')
 
 
 @app.get("/")
