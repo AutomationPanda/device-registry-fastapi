@@ -7,8 +7,8 @@ This module is the main module for the FastAPI app.
 # --------------------------------------------------------------------------------
 
 from fastapi import FastAPI
-from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse, RedirectResponse
 
 from .routers import devices, status
 

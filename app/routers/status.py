@@ -8,7 +8,7 @@ This module provides routes for status.
 
 import time
 
-from . import START_TIME
+from .. import start_time
 from fastapi import APIRouter
 
 
@@ -32,5 +32,5 @@ def get_status():
   
   return {
     'online': True,
-    'uptime': round(time.time() - START_TIME, 3)
+    'uptime': round(time.time() - start_time, 3)
   }
