@@ -10,7 +10,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, RedirectResponse
 
-from .routers import devices, status
+from .routers import auth, devices, status
 
 
 # --------------------------------------------------------------------------------
@@ -18,6 +18,7 @@ from .routers import devices, status
 # --------------------------------------------------------------------------------
 
 app = FastAPI()
+app.include_router(auth.router)
 app.include_router(devices.router)
 app.include_router(status.router)
 
