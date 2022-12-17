@@ -24,45 +24,12 @@ securityBearer = HTTPBearer(auto_error=False)
 
 
 # --------------------------------------------------------------------------------
-# Authentication Checkers
+# Exceptions
 # --------------------------------------------------------------------------------
 
-def get_current_username(
-  credentials: HTTPBasicCredentials = Depends(securityBasic),
-  authorization: HTTPAuthorizationCredentials = Depends(securityBearer)):
-
-  if credentials:
-    current_username = credentials.username.encode("utf8")
-    current_password = credentials.password.encode("utf8")
-
-    if current_username in users:
-      correct_password = users[current_username]
-      if secrets.compare_digest(current_password, correct_password):
-        return credentials.username
-
-    raise HTTPException(
-      status_code=status.HTTP_401_UNAUTHORIZED,
-      detail="Incorrect email or password",
-      headers={"WWW-Authenticate": "Basic"},
-    )
-  
-  elif authorization:
-    current_username = deserialize_token(authorization.credentials)
-
-    if current_username in users:
-      return current_username
-    
-    raise HTTPException(
-      status_code=status.HTTP_401_UNAUTHORIZED,
-      detail="Could not validate credentials",
-      headers={"WWW-Authenticate": "Bearer"},
-    )
-  
-  else:
-    raise HTTPException(
-      status_code=status.HTTP_401_UNAUTHORIZED,
-      detail="Unauthorized",
-    )
+class UnauthorizedException(HTTPException):
+  def __init__(self):
+    super().__init__(status.HTTP_401_UNAUTHORIZED, "Unauthorized")
 
 
 # --------------------------------------------------------------------------------
@@ -76,7 +43,27 @@ def serialize_token(username: str):
 def deserialize_token(token: str):
   try:
     data = jwt.decode(token, secret_key, algorithms=["HS256"])
+    return data['username']
   except:
     return None
-  if 'username' in data:
-    return data['username']
+
+
+# --------------------------------------------------------------------------------
+# Authentication Checkers
+# --------------------------------------------------------------------------------
+
+def get_current_username(
+  basic: HTTPBasicCredentials = Depends(securityBasic),
+  bearer: HTTPAuthorizationCredentials = Depends(securityBearer)):
+
+  if basic:
+    if basic.username in users:
+      if secrets.compare_digest(basic.password, users[basic.username]):
+        return basic.username
+
+  elif bearer:
+    if current_username := deserialize_token(bearer.credentials):
+      if current_username in users:
+        return current_username
+    
+  raise UnauthorizedException()

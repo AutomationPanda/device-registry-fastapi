@@ -46,12 +46,7 @@ secret_key = config['secret_key']
 # Establish the Users
 # --------------------------------------------------------------------------------
 
-users = dict()
-
-for credential in config['users']:
-  bu = bytes(credential['username'], 'utf-8')
-  bp = bytes(credential['password'], 'utf-8')
-  users[bu] = bp
+users = config['users']
 
 
 # --------------------------------------------------------------------------------

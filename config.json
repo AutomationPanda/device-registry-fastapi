@@ -2,14 +2,8 @@
   "db_file": "registry.json",
   "secret_key": "Pandas are awesome!",
 
-  "users": [
-    {
-      "username": "pythonista",
-      "password": "I<3testing"
-    },
-    {
-      "username": "engineer",
-      "password": "Muh5devices"
-    }
-  ]
+  "users": {
+    "pythonista": "I<3testing",
+    "engineer": "Muh5devices"
+  }
 }
