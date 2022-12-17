@@ -42,7 +42,7 @@ def custom_openapi():
     openapi_schema = get_openapi(
         title="Device Registry Service",
         version="2.0.0",
-        description="A FastAPI web service for managing a registry of devices.",
+        description="A FastAPI web service for managing a smart device registry.",
         routes=app.routes,
     )
     openapi_schema["info"]["x-logo"] = {
