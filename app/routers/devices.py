@@ -28,6 +28,7 @@ router = APIRouter()
 # --------------------------------------------------------------------------------
 
 class Device(BaseModel):
+  id: int
   name: str
   location: str
   type: str
@@ -36,7 +37,7 @@ class Device(BaseModel):
   owner: str
 
 
-class DevicePost(BaseModel):
+class DevicePostPut(BaseModel):
   name: str
   location: str
   type: str
@@ -50,7 +51,6 @@ class DevicePatch(BaseModel):
   type: str | None = None
   model: str | None = None
   serial_number: str | None = None
-  owner: str | None = None
 
 
 # --------------------------------------------------------------------------------
@@ -65,13 +65,17 @@ def query_device(device_id: int, username: str):
   elif device["owner"] != username:
     raise Exception("UserUnauthorizedError")
 
+  device['id'] = device_id
   return device
 
 
 def update_device(device_id: int, data: dict, username: str):
   query_device(device_id, username)
   db.update(data, doc_ids=[device_id])
-  return db.get(doc_id=device_id)
+
+  device = db.get(doc_id=device_id)
+  device['id'] = device_id
+  return device
   
 
 # --------------------------------------------------------------------------------
@@ -88,12 +92,17 @@ def get_devices(username: str = Depends(get_current_username)):
   Requires authentication.
   """
 
-  return db.search(Query().owner == username)
+  devices = db.search(Query().owner == username)
+
+  for d in devices:
+    d['id'] = d.doc_id
+
+  return devices
 
 
-@router.post("/devices", response_model=int)
+@router.post("/devices", response_model=Device)
 @router.post("/devices/", include_in_schema=False)
-def post_devices(device: DevicePost, username: str = Depends(get_current_username)):
+def post_devices(device: DevicePostPut, username: str = Depends(get_current_username)):
   """
   Adds a new device owned by the user.
   Requires authentication.
@@ -101,7 +110,9 @@ def post_devices(device: DevicePost, username: str = Depends(get_current_usernam
 
   new_device = device.dict()
   new_device["owner"] = username
-  return db.insert(new_device)
+  device_id = db.insert(new_device)
+
+  return query_device(device_id, username)
 
 
 @router.get("/devices/{device_id}", response_model=Device)
@@ -119,7 +130,7 @@ def get_devices_id(device_id: int, username: str = Depends(get_current_username)
 
 @router.put("/devices/{device_id}", response_model=Device)
 @router.put("/devices/{device_id}/", include_in_schema=False)
-def put_devices_id(device_id: int, device: Device, username: str = Depends(get_current_username)):
+def put_devices_id(device_id: int, device: DevicePostPut, username: str = Depends(get_current_username)):
   """
   Fully updates a device owned by the user.
   Requires authentication.
