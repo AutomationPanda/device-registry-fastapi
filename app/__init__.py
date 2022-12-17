@@ -1,29 +1,62 @@
 """
 This module builds shared parts for other modules.
+It reads in the `config.json` file for app configuration.
+Warning: No error-checking is done for the config.
 """
 
 # --------------------------------------------------------------------------------
 # Imports
 # --------------------------------------------------------------------------------
 
+import json
 import time
-
-from tinydb import TinyDB
+import tinydb
 
 
 # --------------------------------------------------------------------------------
-# Globals
+# Set Start Time
 # --------------------------------------------------------------------------------
 
-secret_key = 'Pandas are awesome!'
 start_time = time.time()
 
-db = TinyDB('registry.json')
 
-users = {
-  b'pythonista': b'I<3testing',
-  b'engineer': b'Muh5devices',
-}
+# --------------------------------------------------------------------------------
+# Read Configuration
+# --------------------------------------------------------------------------------
+
+with open('config.json') as config_json:
+  config = json.load(config_json)
+
+
+# --------------------------------------------------------------------------------
+# Connect the Database
+# --------------------------------------------------------------------------------
+
+db = tinydb.TinyDB(config['db_file'])
+
+
+# --------------------------------------------------------------------------------
+# Establish the Secret Key
+# --------------------------------------------------------------------------------
+
+secret_key = config['secret_key']
+
+
+# --------------------------------------------------------------------------------
+# Establish the Users
+# --------------------------------------------------------------------------------
+
+users = dict()
+
+for credential in config['users']:
+  bu = bytes(credential['username'], 'utf-8')
+  bp = bytes(credential['password'], 'utf-8')
+  users[bu] = bp
+
+
+# --------------------------------------------------------------------------------
+# Insert Data into the Database
+# --------------------------------------------------------------------------------
 
 # db.insert(
 #   {
