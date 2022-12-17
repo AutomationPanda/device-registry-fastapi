@@ -32,7 +32,9 @@ class Token(BaseModel):
 # --------------------------------------------------------------------------------
 
 @router.get("/authenticate", response_model=Token)
+@router.get("/authenticate/", include_in_schema=False)
 @router.head("/authenticate")
+@router.head("/authenticate/", include_in_schema=False)
 def get_authenticate(username: str = Depends(get_current_username)):
   """
   Uses HTTP basic authentication to generate an authentication token.

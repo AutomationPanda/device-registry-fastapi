@@ -79,7 +79,9 @@ def update_device(device_id: int, data: dict, username: str):
 # --------------------------------------------------------------------------------
 
 @router.get("/devices", response_model=list[Device])
+@router.get("/devices/", include_in_schema=False)
 @router.head("/devices")
+@router.head("/devices/", include_in_schema=False)
 def get_devices(username: str = Depends(get_current_username)):
   """
   Gets a list of all devices owned by the user.
@@ -90,6 +92,7 @@ def get_devices(username: str = Depends(get_current_username)):
 
 
 @router.post("/devices", response_model=int)
+@router.post("/devices/", include_in_schema=False)
 def post_devices(device: DevicePost, username: str = Depends(get_current_username)):
   """
   Adds a new device owned by the user.
@@ -102,7 +105,9 @@ def post_devices(device: DevicePost, username: str = Depends(get_current_usernam
 
 
 @router.get("/devices/{device_id}", response_model=Device)
+@router.get("/devices/{device_id}/", include_in_schema=False)
 @router.head("/devices/{device_id}")
+@router.head("/devices/{device_id}/", include_in_schema=False)
 def get_devices_id(device_id: int, username: str = Depends(get_current_username)):
   """
   Gets a device owned by the user.
@@ -113,6 +118,7 @@ def get_devices_id(device_id: int, username: str = Depends(get_current_username)
 
 
 @router.put("/devices/{device_id}", response_model=Device)
+@router.put("/devices/{device_id}/", include_in_schema=False)
 def put_devices_id(device_id: int, device: Device, username: str = Depends(get_current_username)):
   """
   Fully updates a device owned by the user.
@@ -124,6 +130,7 @@ def put_devices_id(device_id: int, device: Device, username: str = Depends(get_c
 
 
 @router.patch("/devices/{device_id}", response_model=Device)
+@router.patch("/devices/{device_id}/", include_in_schema=False)
 def patch_devices_id(device_id: int, device: DevicePatch, username: str = Depends(get_current_username)):
   """
   Partially updates a device owned by the user.
@@ -135,6 +142,7 @@ def patch_devices_id(device_id: int, device: DevicePatch, username: str = Depend
 
 
 @router.delete("/devices/{device_id}", response_model=dict)
+@router.delete("/devices/{device_id}/", include_in_schema=False)
 def delete_devices_id(device_id: int, username: str = Depends(get_current_username)):
   """
   Deletes a device owned by the user.
@@ -147,7 +155,9 @@ def delete_devices_id(device_id: int, username: str = Depends(get_current_userna
 
 
 @router.get("/devices/{device_id}/report")
+@router.get("/devices/{device_id}/report/", include_in_schema=False)
 @router.head("/devices/{device_id}/report")
+@router.head("/devices/{device_id}/report/", include_in_schema=False)
 def get_devices_id_report(device_id: int, username: str = Depends(get_current_username)):
   """
   Prints a text-based report for a device owned by the user.
