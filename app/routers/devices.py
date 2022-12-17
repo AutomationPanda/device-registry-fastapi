@@ -147,6 +147,7 @@ def delete_devices_id(device_id: int, username: str = Depends(get_current_userna
 
 
 @router.get("/devices/{device_id}/report")
+@router.head("/devices/{device_id}/report")
 def get_devices_id_report(device_id: int, username: str = Depends(get_current_username)):
   """
   Prints a text-based report for a device owned by the user.
