@@ -34,9 +34,9 @@ class Status(BaseModel):
 # Routes
 # --------------------------------------------------------------------------------
 
-@router.get("/status", response_model=Status)
+@router.get("/status", summary="Get the status of the service", response_model=Status)
 @router.get("/status/", include_in_schema=False)
-@router.head("/status")
+@router.head("/status", summary="Get the status of the service")
 @router.head("/status/", include_in_schema=False)
 def get_status():
   """

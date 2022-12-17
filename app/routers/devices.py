@@ -82,9 +82,9 @@ def update_device(device_id: int, data: dict, username: str):
 # Routes
 # --------------------------------------------------------------------------------
 
-@router.get("/devices", response_model=list[Device])
+@router.get("/devices", summary="Get the user's devices", response_model=list[Device])
 @router.get("/devices/", include_in_schema=False)
-@router.head("/devices")
+@router.head("/devices", summary="Get the user's devices")
 @router.head("/devices/", include_in_schema=False)
 def get_devices(username: str = Depends(get_current_username)):
   """
@@ -100,7 +100,7 @@ def get_devices(username: str = Depends(get_current_username)):
   return devices
 
 
-@router.post("/devices", response_model=Device)
+@router.post("/devices", summary="Create a new device", response_model=Device)
 @router.post("/devices/", include_in_schema=False)
 def post_devices(device: DevicePostPut, username: str = Depends(get_current_username)):
   """
@@ -115,9 +115,9 @@ def post_devices(device: DevicePostPut, username: str = Depends(get_current_user
   return query_device(device_id, username)
 
 
-@router.get("/devices/{device_id}", response_model=Device)
+@router.get("/devices/{device_id}", summary="Get a device by ID", response_model=Device)
 @router.get("/devices/{device_id}/", include_in_schema=False)
-@router.head("/devices/{device_id}")
+@router.head("/devices/{device_id}", summary="Get a device by ID")
 @router.head("/devices/{device_id}/", include_in_schema=False)
 def get_devices_id(device_id: int, username: str = Depends(get_current_username)):
   """
@@ -128,7 +128,7 @@ def get_devices_id(device_id: int, username: str = Depends(get_current_username)
   return query_device(device_id, username)
 
 
-@router.put("/devices/{device_id}", response_model=Device)
+@router.put("/devices/{device_id}", summary="Fully update a device", response_model=Device)
 @router.put("/devices/{device_id}/", include_in_schema=False)
 def put_devices_id(device_id: int, device: DevicePostPut, username: str = Depends(get_current_username)):
   """
@@ -140,7 +140,7 @@ def put_devices_id(device_id: int, device: DevicePostPut, username: str = Depend
   return update_device(device_id, data, username)
 
 
-@router.patch("/devices/{device_id}", response_model=Device)
+@router.patch("/devices/{device_id}", summary="Partially update a device", response_model=Device)
 @router.patch("/devices/{device_id}/", include_in_schema=False)
 def patch_devices_id(device_id: int, device: DevicePatch, username: str = Depends(get_current_username)):
   """
@@ -152,7 +152,7 @@ def patch_devices_id(device_id: int, device: DevicePatch, username: str = Depend
   return update_device(device_id, data, username)
 
 
-@router.delete("/devices/{device_id}", response_model=dict)
+@router.delete("/devices/{device_id}", summary="Delete a device by ID", response_model=dict)
 @router.delete("/devices/{device_id}/", include_in_schema=False)
 def delete_devices_id(device_id: int, username: str = Depends(get_current_username)):
   """
@@ -165,9 +165,9 @@ def delete_devices_id(device_id: int, username: str = Depends(get_current_userna
   return dict()
 
 
-@router.get("/devices/{device_id}/report")
+@router.get("/devices/{device_id}/report", summary="Download a device report")
 @router.get("/devices/{device_id}/report/", include_in_schema=False)
-@router.head("/devices/{device_id}/report")
+@router.head("/devices/{device_id}/report", summary="Download a device report")
 @router.head("/devices/{device_id}/report/", include_in_schema=False)
 def get_devices_id_report(device_id: int, username: str = Depends(get_current_username)):
   """

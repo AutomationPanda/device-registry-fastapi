@@ -31,9 +31,9 @@ class Token(BaseModel):
 # Routes
 # --------------------------------------------------------------------------------
 
-@router.get("/authenticate", response_model=Token)
+@router.get("/authenticate", summary="Generate an auth token", response_model=Token)
 @router.get("/authenticate/", include_in_schema=False)
-@router.head("/authenticate")
+@router.head("/authenticate", summary="Generate an auth token")
 @router.head("/authenticate/", include_in_schema=False)
 def get_authenticate(username: str = Depends(get_current_username)):
   """
