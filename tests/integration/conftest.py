@@ -77,7 +77,7 @@ def alt_session(alt_user):
 
 @pytest.fixture
 def auth_token(base_url, user):
-  url = base_url.concat('/authenticate/')
+  url = base_url.concat('/authenticate')
   auth = (user.username, user.password)
   response = requests.get(url, auth=auth)
   data = response.json()
@@ -98,7 +98,7 @@ def shared_auth_token(base_url, user, token_holder):
   current_time = time.time()
 
   if not token_holder.token or current_time - token_holder.start_time >= 3600:
-    url = base_url.concat('/authenticate/')
+    url = base_url.concat('/authenticate')
     auth = (user.username, user.password)
     response = requests.get(url, auth=auth)
     data = response.json()
