@@ -191,7 +191,10 @@ def get_devices_id_report(device_id: int, username: str = Depends(get_current_us
   report.write(bytes(f'Owner: {device["owner"]}\n', 'ascii'))
   report.seek(0)
 
+  report_length = str(report.getbuffer().nbytes)
+
   response = StreamingResponse(report, media_type='text/plain')
-  content_disposition = f"attachment; filename*=utf-8''{device['name']}.txt"
+  content_disposition = f'attachment; filename="{device["name"]}.txt"'
   response.headers.setdefault("content-disposition", content_disposition)
+  response.headers.setdefault("content-length", report_length)
   return response
