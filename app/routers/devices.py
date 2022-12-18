@@ -54,10 +54,7 @@ class DevicePostPut(BaseDeviceModel):
 class DevicePatch(BaseDeviceModel):
   name: str | None = None
   location: str | None = None
-  type: str | None = None
-  model: str | None = None
-  serial_number: str | None = None
-
+  
 
 # --------------------------------------------------------------------------------
 # Query Functions
@@ -146,11 +143,12 @@ def put_devices_id(device_id: int, device: DevicePostPut, username: str = Depend
   return update_device(device_id, data, username)
 
 
-@router.patch("/devices/{device_id}", summary="Partially update a device", response_model=Device)
+@router.patch("/devices/{device_id}", summary="Update a device's name and location", response_model=Device)
 @router.patch("/devices/{device_id}/", include_in_schema=False)
 def patch_devices_id(device_id: int, device: DevicePatch, username: str = Depends(get_current_username)):
   """
   Partially updates a device owned by the user.
+  Can only update name and location - not other fields.
   Requires authentication.
   """
 
