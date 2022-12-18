@@ -9,9 +9,8 @@ This module is the main module for the FastAPI app.
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
-from fastapi.responses import FileResponse, RedirectResponse
 
-from .routers import auth, devices, status
+from .routers import auth, devices, root, status
 
 
 # --------------------------------------------------------------------------------
@@ -21,6 +20,7 @@ from .routers import auth, devices, status
 app = FastAPI()
 app.include_router(auth.router)
 app.include_router(devices.router)
+app.include_router(root.router)
 app.include_router(status.router)
 
 app.add_middleware(
@@ -53,34 +53,3 @@ def custom_openapi():
 
 
 app.openapi = custom_openapi
-
-
-# --------------------------------------------------------------------------------
-# Top-Level Routes
-# --------------------------------------------------------------------------------
-
-@app.get("/", summary="Redirect to the docs")
-def get_root():
-  """
-  Redirects to '/docs'.
-  """
-
-  return RedirectResponse("/docs")
-
-
-@app.get("/favicon.ico", include_in_schema=False)
-def get_favicon():
-  """
-  Provides the app's favicon.
-  """
-
-  return FileResponse('img/favicon.ico')
-
-
-@app.get("/logo.png", include_in_schema=False)
-def get_logo():
-  """
-  Provides the app's logo.
-  """
-
-  return FileResponse('img/logo.png')
