@@ -1,6 +1,11 @@
 {
-  "db_file": "registry.json",
+  "database": "dev",
   "secret_key": "Pandas are awesome!",
+
+  "databases": {
+    "dev": "registry-dev.json",
+    "test": "registry-test.json"
+  },
 
   "users": {
     "pythonista": "I<3testing",

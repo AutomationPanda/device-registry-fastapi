@@ -32,7 +32,9 @@ with open('config.json') as config_json:
 # Connect the Database
 # --------------------------------------------------------------------------------
 
-db = tinydb.TinyDB(config['db_file'])
+chosen_db = config['database']
+db_file = config['databases'][chosen_db]
+db = tinydb.TinyDB(db_file)
 
 
 # --------------------------------------------------------------------------------
