@@ -6,9 +6,11 @@ This module is the main module for the FastAPI app.
 # Imports
 # --------------------------------------------------------------------------------
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, status as fastapi_status
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
+from fastapi.responses import JSONResponse
 
 from .routers import auth, devices, root, status
 
@@ -53,3 +55,18 @@ def custom_openapi():
 
 
 app.openapi = custom_openapi
+
+
+# --------------------------------------------------------------------------------
+# Exception Overrides
+# --------------------------------------------------------------------------------
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+  return JSONResponse(
+    status_code=fastapi_status.HTTP_422_UNPROCESSABLE_ENTITY,
+    content={
+      "detail": "Unprocessable Entity",
+      "specifics": exc.errors(),
+    },
+  )
