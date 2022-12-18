@@ -10,7 +10,8 @@ import jwt
 import secrets
 
 from . import users, secret_key
-from fastapi import Depends, HTTPException, status
+from .exceptions import UnauthorizedException
+from fastapi import Depends
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
@@ -21,15 +22,6 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
 securityBasic = HTTPBasic(auto_error=False)
 securityBearer = HTTPBearer(auto_error=False)
-
-
-# --------------------------------------------------------------------------------
-# Exceptions
-# --------------------------------------------------------------------------------
-
-class UnauthorizedException(HTTPException):
-  def __init__(self):
-    super().__init__(status.HTTP_401_UNAUTHORIZED, "Unauthorized")
 
 
 # --------------------------------------------------------------------------------

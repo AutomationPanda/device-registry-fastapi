@@ -8,6 +8,7 @@ This module provides routes for devices.
 
 from .. import db
 from ..auth import get_current_username
+from ..exceptions import ForbiddenException
 
 from io import BytesIO
 from fastapi import APIRouter, Depends
@@ -63,7 +64,7 @@ def query_device(device_id: int, username: str):
   if not device:
     raise Exception("NotFoundError")
   elif device["owner"] != username:
-    raise Exception("UserUnauthorizedError")
+    raise ForbiddenException()
 
   device['id'] = device_id
   return device
