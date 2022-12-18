@@ -6,7 +6,7 @@ This module provides exceptions for the app.
 # Imports
 # --------------------------------------------------------------------------------
 
-from fastapi import Depends, HTTPException, status
+from fastapi import HTTPException, status
 
 
 # --------------------------------------------------------------------------------
