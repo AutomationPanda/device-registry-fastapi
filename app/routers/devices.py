@@ -28,7 +28,12 @@ router = APIRouter()
 # Models
 # --------------------------------------------------------------------------------
 
-class Device(BaseModel):
+class BaseDeviceModel(BaseModel):
+  class Config:
+    extra = "forbid"
+
+
+class Device(BaseDeviceModel):
   id: int
   name: str
   location: str
@@ -38,7 +43,7 @@ class Device(BaseModel):
   owner: str
 
 
-class DevicePostPut(BaseModel):
+class DevicePostPut(BaseDeviceModel):
   name: str
   location: str
   type: str
@@ -46,7 +51,7 @@ class DevicePostPut(BaseModel):
   serial_number: str
 
 
-class DevicePatch(BaseModel):
+class DevicePatch(BaseDeviceModel):
   name: str | None = None
   location: str | None = None
   type: str | None = None
