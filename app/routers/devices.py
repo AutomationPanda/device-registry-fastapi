@@ -89,13 +89,34 @@ def update_device(device_id: int, data: dict, username: str):
 @router.get("/devices/", include_in_schema=False)
 @router.head("/devices", summary="Get the user's devices")
 @router.head("/devices/", include_in_schema=False)
-def get_devices(username: str = Depends(get_current_username)):
+def get_devices(
+  owner: str = Depends(get_current_username),
+  name: str | None = None,
+  location: str | None = None,
+  type: str | None = None,
+  model: str | None = None,
+  serial_number: str | None = None):
   """
   Gets a list of all devices owned by the user.
+  May optionally take query parameters for filtering results.
   Requires authentication.
   """
 
-  devices = db.search(Query().owner == username)
+  DeviceQuery = Query()
+  query = DeviceQuery.owner == owner
+
+  if name is not None:
+    query = (query) & (DeviceQuery.name == name)
+  if location is not None:
+    query = (query) & (DeviceQuery.location == location)
+  if type is not None:
+    query = (query) & (DeviceQuery.type == type)
+  if model is not None:
+    query = (query) & (DeviceQuery.model == model)
+  if serial_number is not None:
+    query = (query) & (DeviceQuery.serial_number == serial_number)
+
+  devices = db.search(query)
 
   for d in devices:
     d['id'] = d.doc_id
