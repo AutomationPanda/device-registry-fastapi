@@ -2,6 +2,7 @@
 This module contains a test for creating a device.
 Its coverage is superseded by test_devices_crud.py and could be deleted.
 However, it remains in this project to serve as example code.
+Furthermore, be warned that the first two tests do not perform cleanup.
 """
 
 # --------------------------------------------------------------------------------
