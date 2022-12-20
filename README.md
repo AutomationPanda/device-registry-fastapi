@@ -57,6 +57,8 @@ If you load that address in a web browser, you should see docs for the REST API.
 *Note:*
 Run `uvicorn app.main:app --reload` to automatically refresh the app whenever its code is changed.
 
+You can kill the app by typing Ctrl-C.
+
 
 ## Choosing a database
 
