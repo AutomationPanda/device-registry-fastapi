@@ -24,7 +24,6 @@ def test_status_get(base_url):
   
   assert response.status_code == 200
   assert data['online'] == True
-  assert data['start_time'] > 0
   assert data['uptime'] > 0
 
 

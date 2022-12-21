@@ -26,7 +26,6 @@ router = APIRouter()
 
 class Status(BaseModel):
   online: bool
-  start_time: float
   uptime: float
 
 
@@ -45,6 +44,5 @@ def get_status():
 
   return Status(
     online=True,
-    start_time=start_time,
     uptime=round(time.time() - start_time, 3)
   )
