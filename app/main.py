@@ -8,7 +8,6 @@ This module is the main module for the FastAPI app.
 
 from fastapi import FastAPI, Request, status as fastapi_status
 from fastapi.exceptions import RequestValidationError
-from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
 from fastapi.responses import JSONResponse
 
@@ -24,14 +23,6 @@ app.include_router(auth.router)
 app.include_router(devices.router)
 app.include_router(root.router)
 app.include_router(status.router)
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=['*'],
-    allow_headers=["*"],
-)
 
 
 # --------------------------------------------------------------------------------

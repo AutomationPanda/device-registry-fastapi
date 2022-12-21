@@ -58,33 +58,12 @@ def test_status_head(base_url):
 
 
 # --------------------------------------------------------------------------------
-# Tests for OPTIONS
-# --------------------------------------------------------------------------------
-
-def test_status_options(base_url):
-
-  # Call OPTIONS
-  url = base_url.concat('/status')
-  headers = {'Origin': 'localhost', 'Access-Control-Request-Method': 'GET'}
-  response = requests.options(url, headers=headers)
-  
-  # Response should be successful
-  assert response.status_code == 200
-  assert response.text == 'OK'
-
-  # Response header should list supported methods
-  allow_string = response.headers['access-control-allow-methods']
-  allowed = sorted(allow_string.split(', '))
-  assert allowed == ['DELETE', 'GET', 'HEAD', 'OPTIONS', 'PATCH', 'POST', 'PUT']
-
-
-# --------------------------------------------------------------------------------
 # Tests for Unsupported Methods
 # --------------------------------------------------------------------------------
 
 @pytest.mark.parametrize(
   'method',
-  ['DELETE', 'PATCH', 'POST', 'PUT']
+  ['DELETE', 'OPTIONS', 'PATCH', 'POST', 'PUT']
 )
 def test_status_invalid_method(base_url, method):
 
