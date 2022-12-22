@@ -78,7 +78,7 @@ This repository comes with two TinyDB databases:
 
 You can choose which database to use by setting the `database` property in [`config.json`](config.json).
 (Read more about setting configuration options in the next section.)
-The configuration defaults to the development database.
+The configuration defaults to the *test* database.
 You can always discard local changes (`git restore`) to the database files to reset them.
 
 
