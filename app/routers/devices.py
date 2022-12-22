@@ -35,12 +35,12 @@ class BaseDeviceModel(BaseModel):
 
 class Device(BaseDeviceModel):
   id: int
+  owner: str
   name: str
   location: str
   type: str
   model: str
   serial_number: str
-  owner: str
 
 
 class DevicePostPut(BaseDeviceModel):
