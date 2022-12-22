@@ -20,8 +20,9 @@ from testlib.devices import verify_devices
 # --------------------------------------------------------------------------------
 
 def verify_authorized(response):
+  data = response.json()
   assert response.status_code == 200
-  assert response.json()
+  assert isinstance(data, list)
 
 
 def verify_unauthorized(response):
