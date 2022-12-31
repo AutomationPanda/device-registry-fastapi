@@ -100,6 +100,34 @@ def test_create_with_invalid_field_yields_error(
     'type': 'value_error.extra'}]
 
 
+@pytest.mark.parametrize(
+  'field, value',
+  [
+    ('name', None),
+    ('location', None),
+    ('type', None),
+    ('model', None),
+    ('serial_number', None)
+  ]
+)
+def test_create_with_invalid_value_yields_error(
+  field, value, base_url, session, thermostat_data):
+  thermostat_data[field] = value
+
+  # Attempt create
+  device_url = base_url.concat('/devices')
+  post_response = session.post(device_url, json=thermostat_data)
+  post_data = post_response.json()
+  
+  # Verify error
+  assert post_response.status_code == 422
+  assert post_data['detail'] == 'Unprocessable Entity'
+  assert post_data['specifics'] == [{
+    'loc': ['body', field],
+    'msg': 'none is not an allowed value',
+    'type': 'type_error.none.not_allowed'}]
+
+
 # --------------------------------------------------------------------------------
 # Retrieve Tests
 # --------------------------------------------------------------------------------
@@ -217,6 +245,34 @@ def test_update_device_via_put_with_invalid_field_yields_error(
     'loc': ['body', field],
     'msg': 'extra fields not permitted',
     'type': 'value_error.extra'}]
+
+
+@pytest.mark.parametrize(
+  'field, value',
+  [
+    ('name', None),
+    ('location', None),
+    ('type', None),
+    ('model', None),
+    ('serial_number', None)
+  ]
+)
+def test_update_device_via_put_with_invalid_value_yields_error(
+  field, value, base_url, session, thermostat, light_data):
+  light_data[field] = value
+
+  # Attempt put
+  device_url = base_url.concat(f'/devices/{thermostat["id"]}')
+  put_response = session.put(device_url, json=light_data)
+  put_data = put_response.json()
+
+  # Verify error
+  assert put_response.status_code == 422
+  assert put_data['detail'] == 'Unprocessable Entity'
+  assert put_data['specifics'] == [{
+    'loc': ['body', field],
+    'msg': 'none is not an allowed value',
+    'type': 'type_error.none.not_allowed'}]
 
 
 # --------------------------------------------------------------------------------
@@ -338,6 +394,31 @@ def test_update_device_via_patch_with_invalid_field_yields_error(
     'loc': ['body', field],
     'msg': 'extra fields not permitted',
     'type': 'value_error.extra'}]
+
+
+@pytest.mark.parametrize(
+  'field, value',
+  [
+    ('name', None),
+    ('location', None)
+  ]
+)
+def test_update_device_via_patch_with_invalid_value_yields_error(
+  field, value, base_url, session, thermostat, light_data):
+  light_data[field] = value
+
+  # Attempt put
+  device_url = base_url.concat(f'/devices/{thermostat["id"]}')
+  put_response = session.put(device_url, json=light_data)
+  put_data = put_response.json()
+
+  # Verify error
+  assert put_response.status_code == 422
+  assert put_data['detail'] == 'Unprocessable Entity'
+  assert put_data['specifics'] == [{
+    'loc': ['body', field],
+    'msg': 'none is not an allowed value',
+    'type': 'type_error.none.not_allowed'}]
 
 
 # --------------------------------------------------------------------------------
