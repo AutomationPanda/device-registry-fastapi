@@ -168,7 +168,7 @@ def test_full_update_device(base_url, session, thermostat, light_data):
 
   # Verify retrieve
   assert get_response.status_code == 200
-  assert get_data == put_data
+  assert get_data == light_data
 
 
 def test_update_nonexistent_device_via_put_yields_error(base_url, session, light_data):
@@ -303,7 +303,7 @@ def test_partial_update_device(
 
   # Verify retrieve
   assert get_response.status_code == 200
-  assert get_data == patch_data
+  assert get_data == thermostat_patch_data
 
 
 @pytest.mark.parametrize(
