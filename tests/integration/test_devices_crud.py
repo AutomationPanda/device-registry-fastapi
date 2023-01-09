@@ -436,6 +436,15 @@ def test_delete_device(base_url, session, thermostat, device_creator):
   assert delete_response.status_code == 200
   assert not delete_data
 
+  # Attempt to retrieve the deleted device
+  device_url = base_url.concat(f'/devices/{thermostat["id"]}')
+  get_response = session.get(device_url)
+  get_data = get_response.json()
+
+  # Verify error
+  assert get_response.status_code == 404
+  assert get_data['detail'] == 'Not Found'
+
   # Mark device as deleted
   device_creator.remove(thermostat['id'])
 
