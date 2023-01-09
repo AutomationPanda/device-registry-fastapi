@@ -37,7 +37,7 @@ def _build_session(user):
 
 @pytest.fixture(scope='session')
 def test_inputs():
-  with open('tests/integration/inputs.json') as config_json:
+  with open('inputs.json') as config_json:
     data = json.load(config_json)
   return data
 
