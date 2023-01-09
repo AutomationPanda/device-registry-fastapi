@@ -171,7 +171,7 @@ def test_full_update_device(base_url, session, thermostat, light_data):
   assert get_data == light_data
 
 
-def test_update_nonexistent_device_via_put_yields_error(base_url, session, light_data):
+def test_full_update_nonexistent_device_yields_error(base_url, session, light_data):
 
   # Attempt put
   device_url = base_url.concat(f'/devices/{NONEXISTENT_ID}')
@@ -337,7 +337,7 @@ def test_partial_update_device_with_one_field(
   assert get_data == patch_data
 
 
-def test_update_nonexistent_device_via_patch_yields_error(
+def test_partial_update_nonexistent_device_yields_error(
   base_url, session, thermostat_patch_data):
 
   # Attempt patch
