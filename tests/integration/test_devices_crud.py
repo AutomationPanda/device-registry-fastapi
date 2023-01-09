@@ -334,7 +334,7 @@ def test_partial_update_device_with_one_field(
 
   # Verify retrieve
   assert get_response.status_code == 200
-  assert get_data == patch_data
+  assert get_data == thermostat_data
 
 
 def test_partial_update_nonexistent_device_yields_error(
