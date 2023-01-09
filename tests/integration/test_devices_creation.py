@@ -41,14 +41,13 @@ def test_create_device(base_url, session):
   assert post_data == thermostat_data
 
   # Retrieve
-  get_response = session.get(device_url)
+  device_id_url = base_url.concat(f'/devices/{post_data["id"]}')
+  get_response = session.get(device_id_url)
   get_data = get_response.json()
 
   # Verify retrieve
   assert get_response.status_code == 200
-  get_devices = [d for d in get_data if d['id'] == post_data['id']]
-  assert len(get_devices) == 1
-  assert get_devices[0] == post_data
+  assert get_data == post_data
 
 
 def test_create_device_with_waiting(base_url, session):
@@ -76,31 +75,28 @@ def test_create_device_with_waiting(base_url, session):
   thermostat_data['owner'] = session.auth[0]
   assert post_data == thermostat_data
 
+  device_id_url = base_url.concat(f'/devices/{post_data["id"]}')
   attempts = 60
-  get_devices = []
+  get_code = 0
 
-  while len(get_devices) == 0 and attempts > 0:
+  while get_code != 200 and attempts > 0:
     attempts -= 1
     time.sleep(1)
-    get_response = session.get(device_url)
-    get_data = get_response.json()
-    get_devices = [d for d in get_data if d['id'] == post_data['id']]
+    get_response = session.get(device_id_url)
+    get_code = get_response.status_code
   
   assert attempts > 0
   assert get_response.status_code == 200
-  assert len(get_devices) == 1
-  assert get_devices[0] == post_data
+  assert get_response.json() == post_data
 
 
 def test_create_device_with_fixture(base_url, session, thermostat):
 
   # Retrieve
-  device_url = base_url.concat('/devices')
+  device_url = base_url.concat(f'/devices/{thermostat["id"]}')
   get_response = session.get(device_url)
   get_data = get_response.json()
 
   # Verify retrieve
   assert get_response.status_code == 200
-  get_devices = [d for d in get_data if d['id'] == thermostat['id']]
-  assert len(get_devices) == 1
-  assert get_devices[0] == thermostat
+  assert get_data == thermostat
