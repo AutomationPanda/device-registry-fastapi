@@ -148,7 +148,7 @@ def test_retrieve_nonexistent_device_yields_error(base_url, session):
 # Update Tests for PUT
 # --------------------------------------------------------------------------------
 
-def test_update_device_via_put(base_url, user, session, thermostat, light_data):
+def test_full_update_device(base_url, user, session, thermostat, light_data):
 
   # Put
   device_url = base_url.concat(f'/devices/{thermostat["id"]}')
@@ -183,7 +183,7 @@ def test_update_nonexistent_device_via_put_yields_error(base_url, session, light
   assert put_data['detail'] == 'Not Found'
 
 
-def test_update_device_via_put_with_no_body_yields_error(base_url, session, thermostat):
+def test_full_update_device_with_no_body_yields_error(base_url, session, thermostat):
 
   # Attempt put
   device_url = base_url.concat(f'/devices/{thermostat["id"]}')
@@ -203,7 +203,7 @@ def test_update_device_via_put_with_no_body_yields_error(base_url, session, ther
   'field',
   ['name', 'location', 'type', 'model', 'serial_number']
 )
-def test_update_device_via_put_with_missing_field_yields_error(
+def test_full_update_device_with_missing_field_yields_error(
   field, base_url, session, thermostat, light_data):
   del light_data[field]
 
@@ -229,7 +229,7 @@ def test_update_device_via_put_with_missing_field_yields_error(
     ('garbage', 'nonsense')
   ]
 )
-def test_update_device_via_put_with_invalid_field_yields_error(
+def test_full_update_device_with_invalid_field_yields_error(
   field, value, base_url, session, thermostat, light_data):
   light_data[field] = value
 
@@ -257,7 +257,7 @@ def test_update_device_via_put_with_invalid_field_yields_error(
     ('serial_number', None)
   ]
 )
-def test_update_device_via_put_with_invalid_value_yields_error(
+def test_full_update_device_with_invalid_value_yields_error(
   field, value, base_url, session, thermostat, light_data):
   light_data[field] = value
 
@@ -279,7 +279,7 @@ def test_update_device_via_put_with_invalid_value_yields_error(
 # Update Tests for PATCH
 # --------------------------------------------------------------------------------
 
-def test_update_device_via_patch(
+def test_partial_update_device(
   base_url, user, session, thermostat, thermostat_patch_data):
 
   # Patch
@@ -313,7 +313,7 @@ def test_update_device_via_patch(
     ('location', 'My House')
   ]
 )
-def test_update_device_via_patch_with_one_field(
+def test_partial_update_device_with_one_field(
   field, value, base_url, session, thermostat, thermostat_data):
 
   # Patch
@@ -350,7 +350,7 @@ def test_update_nonexistent_device_via_patch_yields_error(
   assert patch_data['detail'] == 'Not Found'
 
 
-def test_update_device_via_patch_with_no_body_yields_error(
+def test_partial_update_device_with_no_body_yields_error(
   base_url, session, thermostat):
 
   # Attempt patch
@@ -378,7 +378,7 @@ def test_update_device_via_patch_with_no_body_yields_error(
     ('garbage', 'nonsense')
   ]
 )
-def test_update_device_via_patch_with_invalid_field_yields_error(
+def test_partial_update_device_with_invalid_field_yields_error(
   field, value, base_url, session, thermostat, thermostat_patch_data):
   thermostat_patch_data[field] = value
 
@@ -403,7 +403,7 @@ def test_update_device_via_patch_with_invalid_field_yields_error(
     ('location', None)
   ]
 )
-def test_update_device_via_patch_with_invalid_value_yields_error(
+def test_partial_update_device_with_invalid_value_yields_error(
   field, value, base_url, session, thermostat, light_data):
   light_data[field] = value
 
