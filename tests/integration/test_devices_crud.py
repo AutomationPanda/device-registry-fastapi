@@ -148,7 +148,7 @@ def test_retrieve_nonexistent_device_yields_error(base_url, session):
 # Update Tests for PUT
 # --------------------------------------------------------------------------------
 
-def test_full_update_device(base_url, user, session, thermostat, light_data):
+def test_full_update_device(base_url, session, thermostat, light_data):
 
   # Put
   device_url = base_url.concat(f'/devices/{thermostat["id"]}')
@@ -158,7 +158,7 @@ def test_full_update_device(base_url, user, session, thermostat, light_data):
   # Verify put
   assert put_response.status_code == 200
   light_data['id'] = thermostat['id']
-  light_data['owner'] = user.username
+  light_data['owner'] = thermostat['owner']
   assert put_data == light_data
 
   # Retrieve
@@ -280,7 +280,7 @@ def test_full_update_device_with_invalid_value_yields_error(
 # --------------------------------------------------------------------------------
 
 def test_partial_update_device(
-  base_url, user, session, thermostat, thermostat_patch_data):
+  base_url, session, thermostat, thermostat_patch_data):
 
   # Patch
   device_url = base_url.concat(f'/devices/{thermostat["id"]}')
@@ -293,7 +293,7 @@ def test_partial_update_device(
   thermostat_patch_data['type'] = thermostat['type']
   thermostat_patch_data['model'] = thermostat['model']
   thermostat_patch_data['serial_number'] = thermostat['serial_number']
-  thermostat_patch_data['owner'] = user.username
+  thermostat_patch_data['owner'] = thermostat['owner']
   assert patch_data == thermostat_patch_data
 
   # Retrieve
