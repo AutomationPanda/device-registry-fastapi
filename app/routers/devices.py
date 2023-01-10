@@ -173,7 +173,7 @@ def patch_devices_id(device_id: int, device: DevicePatch, username: str = Depend
   Requires authentication.
   """
 
-  data = device.dict(exclude_unset=True)
+  data = device.dict(exclude_unset=True, exclude_none=True)
   return update_device(device_id, data, username)
 
 
