@@ -145,8 +145,9 @@ NONEXISTENT_ID = 999999999
 
 
 def verify_not_found(response):
+  body = response.json()
   assert response.status_code == 404
-  assert response.json()['detail'] == 'Not Found'
+  assert body['detail'] == 'Not Found'
 
 
 def test_nonexistent_id_error_for_device_retrieve(
