@@ -150,6 +150,19 @@ def verify_not_found(response):
   assert body['detail'] == 'Not Found'
 
 
+# def test_nonexistent_id_error_for_device_retrieve(
+#   base_url, session):
+
+#   # Attempt retrieve
+#   device_url = base_url.concat(f'/devices/{NONEXISTENT_ID}')
+#   get_response = session.get(device_url)
+#   get_data = get_response.json()
+
+#   # Verify error
+#   assert get_response.status_code == 404
+#   assert get_data['detail'] == 'Not Found'
+
+
 def test_nonexistent_id_error_for_device_retrieve(
   base_url, session):
 
