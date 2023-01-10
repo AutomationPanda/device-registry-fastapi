@@ -7,14 +7,6 @@ Therefore, their names do not mirror resource paths.
 """
 
 # --------------------------------------------------------------------------------
-# "Constants"
-# --------------------------------------------------------------------------------
-
-EXPLICIT_ID = 500
-NONEXISTENT_ID = 999999999
-
-
-# --------------------------------------------------------------------------------
 # Imports
 # --------------------------------------------------------------------------------
 
@@ -22,10 +14,11 @@ import pytest
 
 
 # --------------------------------------------------------------------------------
-# Create Tests
+# Positive CRUD Tests
 # --------------------------------------------------------------------------------
 
-def test_create_and_retrieve_device(base_url, session, thermostat):
+def test_create_and_retrieve_device(
+  base_url, session, thermostat):
 
   # Retrieve
   device_id_url = base_url.concat(f'/devices/{thermostat["id"]}')
@@ -37,118 +30,8 @@ def test_create_and_retrieve_device(base_url, session, thermostat):
   assert get_data == thermostat
 
 
-def test_create_with_no_body_yields_error(base_url, session):
-
-  # Attempt create
-  device_url = base_url.concat('/devices')
-  post_response = session.post(device_url)
-  post_data = post_response.json()
-
-  # Verify error
-  assert post_response.status_code == 422
-  assert post_data['detail'] == 'Unprocessable Entity'
-  assert post_data['specifics'] == [{
-    'loc': ['body'],
-    'msg': 'field required',
-    'type': 'value_error.missing'}]
-
-
-@pytest.mark.parametrize(
-  'field',
-  ['name', 'location', 'type', 'model', 'serial_number']
-)
-def test_create_with_missing_field_yields_error(field, base_url, session, thermostat_data):
-  del thermostat_data[field]
-
-  # Attempt create
-  device_url = base_url.concat('/devices')
-  post_response = session.post(device_url, json=thermostat_data)
-  post_data = post_response.json()
-  
-  # Verify error
-  assert post_response.status_code == 422
-  assert post_data['detail'] == 'Unprocessable Entity'
-  assert post_data['specifics'] == [{
-    'loc': ['body', field],
-    'msg': 'field required',
-    'type': 'value_error.missing'}]
-
-
-@pytest.mark.parametrize(
-  'field, value',
-  [
-    ('id', EXPLICIT_ID),
-    ('owner', 'nobody'),
-    ('garbage', 'nonsense')
-  ]
-)
-def test_create_with_invalid_field_yields_error(
-  field, value, base_url, session, thermostat_data):
-  thermostat_data[field] = value
-
-  # Attempt create
-  device_url = base_url.concat('/devices')
-  post_response = session.post(device_url, json=thermostat_data)
-  post_data = post_response.json()
-  
-  # Verify error
-  assert post_response.status_code == 422
-  assert post_data['detail'] == 'Unprocessable Entity'
-  assert post_data['specifics'] == [{
-    'loc': ['body', field],
-    'msg': 'extra fields not permitted',
-    'type': 'value_error.extra'}]
-
-
-@pytest.mark.parametrize(
-  'field, value',
-  [
-    ('name', None),
-    ('location', None),
-    ('type', None),
-    ('model', None),
-    ('serial_number', None)
-  ]
-)
-def test_create_with_invalid_value_yields_error(
-  field, value, base_url, session, thermostat_data):
-  thermostat_data[field] = value
-
-  # Attempt create
-  device_url = base_url.concat('/devices')
-  post_response = session.post(device_url, json=thermostat_data)
-  post_data = post_response.json()
-  
-  # Verify error
-  assert post_response.status_code == 422
-  assert post_data['detail'] == 'Unprocessable Entity'
-  assert post_data['specifics'] == [{
-    'loc': ['body', field],
-    'msg': 'none is not an allowed value',
-    'type': 'type_error.none.not_allowed'}]
-
-
-# --------------------------------------------------------------------------------
-# Retrieve Tests
-# --------------------------------------------------------------------------------
-
-def test_retrieve_nonexistent_device_yields_error(base_url, session):
-
-  # Attempt retrieve
-  device_url = base_url.concat(f'/devices/{NONEXISTENT_ID}')
-  get_response = session.get(device_url)
-  get_data = get_response.json()
-
-  # Verify error
-  assert get_response.status_code == 404
-  assert get_data['detail'] == 'Not Found'
-
-
-# --------------------------------------------------------------------------------
-# Update Tests for PUT
-# --------------------------------------------------------------------------------
-
-def test_full_update_device(base_url, session, thermostat, light_data):
+def test_full_update_device(
+  base_url, session, thermostat, light_data):
 
   # Put
   device_url = base_url.concat(f'/devices/{thermostat["id"]}')
@@ -170,114 +53,6 @@ def test_full_update_device(base_url, session, thermostat, light_data):
   assert get_response.status_code == 200
   assert get_data == light_data
 
-
-def test_full_update_nonexistent_device_yields_error(base_url, session, light_data):
-
-  # Attempt put
-  device_url = base_url.concat(f'/devices/{NONEXISTENT_ID}')
-  put_response = session.put(device_url, json=light_data)
-  put_data = put_response.json()
-
-  # Verify error
-  assert put_response.status_code == 404
-  assert put_data['detail'] == 'Not Found'
-
-
-def test_full_update_device_with_no_body_yields_error(base_url, session, thermostat):
-
-  # Attempt put
-  device_url = base_url.concat(f'/devices/{thermostat["id"]}')
-  put_response = session.put(device_url)
-  put_data = put_response.json()
-
-  # Verify error
-  assert put_response.status_code == 422
-  assert put_data['detail'] == 'Unprocessable Entity'
-  assert put_data['specifics'] == [{
-    'loc': ['body'],
-    'msg': 'field required',
-    'type': 'value_error.missing'}]
-
-
-@pytest.mark.parametrize(
-  'field',
-  ['name', 'location', 'type', 'model', 'serial_number']
-)
-def test_full_update_device_with_missing_field_yields_error(
-  field, base_url, session, thermostat, light_data):
-  del light_data[field]
-
-  # Attempt put
-  device_url = base_url.concat(f'/devices/{thermostat["id"]}')
-  put_response = session.put(device_url, json=light_data)
-  put_data = put_response.json()
-
-  # Verify error
-  assert put_response.status_code == 422
-  assert put_data['detail'] == 'Unprocessable Entity'
-  assert put_data['specifics'] == [{
-    'loc': ['body', field],
-    'msg': 'field required',
-    'type': 'value_error.missing'}]
-
-
-@pytest.mark.parametrize(
-  'field, value',
-  [
-    ('id', EXPLICIT_ID),
-    ('owner', 'nobody'),
-    ('garbage', 'nonsense')
-  ]
-)
-def test_full_update_device_with_invalid_field_yields_error(
-  field, value, base_url, session, thermostat, light_data):
-  light_data[field] = value
-
-  # Attempt put
-  device_url = base_url.concat(f'/devices/{thermostat["id"]}')
-  put_response = session.put(device_url, json=light_data)
-  put_data = put_response.json()
-
-  # Verify error
-  assert put_response.status_code == 422
-  assert put_data['detail'] == 'Unprocessable Entity'
-  assert put_data['specifics'] == [{
-    'loc': ['body', field],
-    'msg': 'extra fields not permitted',
-    'type': 'value_error.extra'}]
-
-
-@pytest.mark.parametrize(
-  'field, value',
-  [
-    ('name', None),
-    ('location', None),
-    ('type', None),
-    ('model', None),
-    ('serial_number', None)
-  ]
-)
-def test_full_update_device_with_invalid_value_yields_error(
-  field, value, base_url, session, thermostat, light_data):
-  light_data[field] = value
-
-  # Attempt put
-  device_url = base_url.concat(f'/devices/{thermostat["id"]}')
-  put_response = session.put(device_url, json=light_data)
-  put_data = put_response.json()
-
-  # Verify error
-  assert put_response.status_code == 422
-  assert put_data['detail'] == 'Unprocessable Entity'
-  assert put_data['specifics'] == [{
-    'loc': ['body', field],
-    'msg': 'none is not an allowed value',
-    'type': 'type_error.none.not_allowed'}]
-
-
-# --------------------------------------------------------------------------------
-# Update Tests for PATCH
-# --------------------------------------------------------------------------------
 
 def test_partial_update_device(
   base_url, session, thermostat, thermostat_patch_data):
@@ -337,95 +112,8 @@ def test_partial_update_device_with_one_field(
   assert get_data == thermostat_data
 
 
-def test_partial_update_nonexistent_device_yields_error(
-  base_url, session, thermostat_patch_data):
-
-  # Attempt patch
-  device_url = base_url.concat(f'/devices/{NONEXISTENT_ID}')
-  patch_response = session.patch(device_url, json=thermostat_patch_data)
-  patch_data = patch_response.json()
-
-  # Verify error
-  assert patch_response.status_code == 404
-  assert patch_data['detail'] == 'Not Found'
-
-
-def test_partial_update_device_with_no_body_yields_error(
-  base_url, session, thermostat):
-
-  # Attempt patch
-  device_url = base_url.concat(f'/devices/{thermostat["id"]}')
-  patch_response = session.patch(device_url)
-  patch_data = patch_response.json()
-
-  # Verify error
-  assert patch_response.status_code == 422
-  assert patch_data['detail'] == 'Unprocessable Entity'
-  assert patch_data['specifics'] == [{
-    'loc': ['body'],
-    'msg': 'field required',
-    'type': 'value_error.missing'}]
-
-
-@pytest.mark.parametrize(
-  'field, value',
-  [
-    ('id', EXPLICIT_ID),
-    ('owner', 'nobody'),
-    ('type', 'Light Switch'),
-    ('model', 'ABC123'),
-    ('serial_number', 'ABC123'),
-    ('garbage', 'nonsense')
-  ]
-)
-def test_partial_update_device_with_invalid_field_yields_error(
-  field, value, base_url, session, thermostat, thermostat_patch_data):
-  thermostat_patch_data[field] = value
-
-  # Attempt patch
-  device_url = base_url.concat(f'/devices/{thermostat["id"]}')
-  patch_response = session.patch(device_url, json=thermostat_patch_data)
-  patch_data = patch_response.json()
-
-  # Verify error
-  assert patch_response.status_code == 422
-  assert patch_data['detail'] == 'Unprocessable Entity'
-  assert patch_data['specifics'] == [{
-    'loc': ['body', field],
-    'msg': 'extra fields not permitted',
-    'type': 'value_error.extra'}]
-
-
-@pytest.mark.parametrize(
-  'field, value',
-  [
-    ('name', None),
-    ('location', None)
-  ]
-)
-def test_partial_update_device_with_invalid_value_yields_error(
-  field, value, base_url, session, thermostat, light_data):
-  light_data[field] = value
-
-  # Attempt put
-  device_url = base_url.concat(f'/devices/{thermostat["id"]}')
-  put_response = session.put(device_url, json=light_data)
-  put_data = put_response.json()
-
-  # Verify error
-  assert put_response.status_code == 422
-  assert put_data['detail'] == 'Unprocessable Entity'
-  assert put_data['specifics'] == [{
-    'loc': ['body', field],
-    'msg': 'none is not an allowed value',
-    'type': 'type_error.none.not_allowed'}]
-
-
-# --------------------------------------------------------------------------------
-# Delete Tests
-# --------------------------------------------------------------------------------
-
-def test_delete_device(base_url, session, thermostat, device_creator):
+def test_delete_device(
+  base_url, session, thermostat, device_creator):
 
   # Delete
   device_id_url = base_url.concat(f'/devices/{thermostat["id"]}')
@@ -449,13 +137,276 @@ def test_delete_device(base_url, session, thermostat, device_creator):
   device_creator.remove(thermostat['id'])
 
 
-def test_delete_nonexistent_device(base_url, session):
+# --------------------------------------------------------------------------------
+# Nonexistent ID Tests
+# --------------------------------------------------------------------------------
+
+NONEXISTENT_ID = 999999999
+
+
+def verify_not_found(response):
+  assert response.status_code == 404
+  assert response.json()['detail'] == 'Not Found'
+
+
+def test_nonexistent_id_error_for_device_retrieve(
+  base_url, session):
+
+  # Attempt retrieve
+  device_url = base_url.concat(f'/devices/{NONEXISTENT_ID}')
+  get_response = session.get(device_url)
+
+  # Verify error
+  verify_not_found(get_response)
+
+
+def test_nonexistent_id_error_for_device_full_update(
+  base_url, session, light_data):
+
+  # Attempt put
+  device_url = base_url.concat(f'/devices/{NONEXISTENT_ID}')
+  put_response = session.put(device_url, json=light_data)
+
+  # Verify error
+  verify_not_found(put_response)
+
+
+def test_nonexistent_id_error_for_device_partial_update(
+  base_url, session, thermostat_patch_data):
+
+  # Attempt patch
+  device_url = base_url.concat(f'/devices/{NONEXISTENT_ID}')
+  patch_response = session.patch(device_url, json=thermostat_patch_data)
+
+  # Verify error
+  verify_not_found(patch_response)
+
+
+def test_nonexistent_id_error_for_device_delete(
+  base_url, session):
 
   # Delete
   device_id_url = base_url.concat(f'/devices/{NONEXISTENT_ID}')
   delete_response = session.delete(device_id_url)
-  delete_data = delete_response.json()
 
   # Verify error
-  assert delete_response.status_code == 404
-  assert delete_data['detail'] == 'Not Found'
+  verify_not_found(delete_response)
+
+
+# --------------------------------------------------------------------------------
+# Missing Body Tests
+# --------------------------------------------------------------------------------
+
+def verify_body_missing(response):
+  body = response.json()
+  assert response.status_code == 422
+  assert body['detail'] == 'Unprocessable Entity'
+  assert body['specifics'] == [{
+    'loc': ['body'],
+    'msg': 'field required',
+    'type': 'value_error.missing'}]
+
+
+def test_missing_body_error_for_device_create(
+  base_url, session):
+
+  # Attempt create
+  device_url = base_url.concat('/devices')
+  post_response = session.post(device_url)
+
+  # Verify error
+  verify_body_missing(post_response)
+
+
+def test_missing_body_error_for_device_full_update(
+  base_url, session, thermostat):
+
+  # Attempt put
+  device_url = base_url.concat(f'/devices/{thermostat["id"]}')
+  put_response = session.put(device_url)
+
+  # Verify error
+  verify_body_missing(put_response)
+
+
+def test_missing_body_error_for_device_partial_update(
+  base_url, session, thermostat):
+
+  # Attempt patch
+  device_url = base_url.concat(f'/devices/{thermostat["id"]}')
+  patch_response = session.patch(device_url)
+
+  # Verify error
+  verify_body_missing(patch_response)
+
+
+# --------------------------------------------------------------------------------
+# Missing Field Tests
+# --------------------------------------------------------------------------------
+
+FIELDS = ['name', 'location', 'type', 'model', 'serial_number']
+
+
+def verify_missing_field(response, field):
+  body = response.json()
+  assert response.status_code == 422
+  assert body['detail'] == 'Unprocessable Entity'
+  assert body['specifics'] == [{
+    'loc': ['body', field],
+    'msg': 'field required',
+    'type': 'value_error.missing'}]
+
+
+@pytest.mark.parametrize('field', FIELDS)
+def test_missing_field_error_for_device_create(
+  field, base_url, session, thermostat_data):
+
+  # Attempt create
+  del thermostat_data[field]
+  device_url = base_url.concat('/devices')
+  post_response = session.post(device_url, json=thermostat_data)
+  
+  # Verify error
+  verify_missing_field(post_response, field)
+
+
+@pytest.mark.parametrize('field', FIELDS)
+def test_missing_field_error_for_device_full_update(
+  field, base_url, session, thermostat, light_data):
+
+  # Attempt put
+  del light_data[field]
+  device_url = base_url.concat(f'/devices/{thermostat["id"]}')
+  put_response = session.put(device_url, json=light_data)
+
+  # Verify error
+  verify_missing_field(put_response, field)
+
+
+# --------------------------------------------------------------------------------
+# Invalid Field Name Tests
+# --------------------------------------------------------------------------------
+
+EXPLICIT_ID = 500
+
+
+def verify_invalid_field_name(response, field):
+  body = response.json()
+  assert response.status_code == 422
+  assert body['detail'] == 'Unprocessable Entity'
+  assert body['specifics'] == [{
+    'loc': ['body', field],
+    'msg': 'extra fields not permitted',
+    'type': 'value_error.extra'}]
+
+
+@pytest.mark.parametrize(
+  'field, value',
+  [
+    ('id', EXPLICIT_ID),
+    ('owner', 'nobody'),
+    ('garbage', 'nonsense')
+  ]
+)
+def test_invalid_field_name_error_for_device_create(
+  field, value, base_url, session, thermostat_data):
+
+  # Attempt create
+  thermostat_data[field] = value
+  device_url = base_url.concat('/devices')
+  post_response = session.post(device_url, json=thermostat_data)
+  
+  # Verify error
+  verify_invalid_field_name(post_response, field)
+
+
+@pytest.mark.parametrize(
+  'field, value',
+  [
+    ('id', EXPLICIT_ID),
+    ('owner', 'nobody'),
+    ('garbage', 'nonsense')
+  ]
+)
+def test_invalid_field_name_error_for_device_full_update(
+  field, value, base_url, session, thermostat, light_data):
+
+  # Attempt put
+  light_data[field] = value
+  device_url = base_url.concat(f'/devices/{thermostat["id"]}')
+  put_response = session.put(device_url, json=light_data)
+
+  # Verify error
+  verify_invalid_field_name(put_response, field)
+
+
+@pytest.mark.parametrize(
+  'field, value',
+  [
+    ('id', EXPLICIT_ID),
+    ('owner', 'nobody'),
+    ('type', 'Light Switch'),
+    ('model', 'ABC123'),
+    ('serial_number', 'ABC123'),
+    ('garbage', 'nonsense')
+  ]
+)
+def test_invalid_field_name_error_for_device_partial_update(
+  field, value, base_url, session, thermostat, thermostat_patch_data):
+
+  # Attempt patch
+  thermostat_patch_data[field] = value
+  device_url = base_url.concat(f'/devices/{thermostat["id"]}')
+  patch_response = session.patch(device_url, json=thermostat_patch_data)
+
+  # Verify error
+  verify_invalid_field_name(patch_response, field)
+
+
+# --------------------------------------------------------------------------------
+# Invalid Field Value Tests
+# --------------------------------------------------------------------------------
+
+INVALID_VALUES = [
+  ('name', None),
+  ('location', None),
+  ('type', None),
+  ('model', None),
+  ('serial_number', None)
+]
+
+
+def verify_invalid_field_value(response, field):
+  body = response.json()
+  assert response.status_code == 422
+  assert body['detail'] == 'Unprocessable Entity'
+  assert body['specifics'] == [{
+    'loc': ['body', field],
+    'msg': 'none is not an allowed value',
+    'type': 'type_error.none.not_allowed'}]
+
+
+@pytest.mark.parametrize('field, value', INVALID_VALUES)
+def test_invalid_field_value_error_for_device_create(
+  field, value, base_url, session, thermostat_data):
+
+  # Attempt create
+  thermostat_data[field] = value
+  device_url = base_url.concat('/devices')
+  post_response = session.post(device_url, json=thermostat_data)
+  
+  # Verify error
+  verify_invalid_field_value(post_response, field)
+
+
+@pytest.mark.parametrize('field, value', INVALID_VALUES)
+def test_invalid_field_value_error_for_device_full_create(
+  field, value, base_url, session, thermostat, light_data):
+
+  # Attempt put
+  light_data[field] = value
+  device_url = base_url.concat(f'/devices/{thermostat["id"]}')
+  put_response = session.put(device_url, json=light_data)
+
+  # Verify error
+  verify_invalid_field_value(put_response, field)
