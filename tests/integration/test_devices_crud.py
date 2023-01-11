@@ -301,9 +301,6 @@ def test_missing_field_error_for_device_full_update(
 # Invalid Field Name Tests
 # --------------------------------------------------------------------------------
 
-EXPLICIT_ID = 500
-
-
 def verify_invalid_field_name(response, field):
   body = response.json()
   assert response.status_code == 422
@@ -317,7 +314,7 @@ def verify_invalid_field_name(response, field):
 @pytest.mark.parametrize(
   'field, value',
   [
-    ('id', EXPLICIT_ID),
+    ('id', 500),
     ('owner', 'nobody'),
     ('garbage', 'nonsense')
   ]
@@ -337,7 +334,7 @@ def test_invalid_field_name_error_for_device_create(
 @pytest.mark.parametrize(
   'field, value',
   [
-    ('id', EXPLICIT_ID),
+    ('id', 500),
     ('owner', 'nobody'),
     ('garbage', 'nonsense')
   ]
@@ -357,7 +354,7 @@ def test_invalid_field_name_error_for_device_full_update(
 @pytest.mark.parametrize(
   'field, value',
   [
-    ('id', EXPLICIT_ID),
+    ('id', 500),
     ('owner', 'nobody'),
     ('type', 'Light Switch'),
     ('model', 'ABC123'),
