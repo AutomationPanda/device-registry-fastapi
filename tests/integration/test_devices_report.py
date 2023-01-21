@@ -15,9 +15,9 @@ def test_device_report_download(base_url, session, thermostat):
 
   # Verify response
   assert get_response.status_code == 200
-  assert 'text/plain' in get_response.headers['Content-Type']
-  assert int(get_response.headers['Content-Length']) > 0
-  assert get_response.headers['Content-Disposition'] == 'attachment; filename="Main Thermostat.txt"'
+  assert 'text/plain' in get_response.headers['content-type']
+  assert int(get_response.headers['content-length']) > 0
+  assert get_response.headers['content-disposition'] == 'attachment; filename="Main Thermostat.txt"'
 
   # Verify content
   expected_report = \
