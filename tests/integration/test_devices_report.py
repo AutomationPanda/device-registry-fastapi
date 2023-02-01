@@ -22,11 +22,11 @@ def test_device_report_download(base_url, session, thermostat):
   # Verify content
   expected_report = \
     f"ID: {thermostat['id']}\n" + \
+    f"Owner: {thermostat['owner']}\n" + \
     f"Name: {thermostat['name']}\n" + \
     f"Location: {thermostat['location']}\n" + \
     f"Type: {thermostat['type']}\n" + \
     f"Model: {thermostat['model']}\n" + \
-    f"Serial Number: {thermostat['serial_number']}\n" + \
-    f"Owner: {thermostat['owner']}\n"
+    f"Serial Number: {thermostat['serial_number']}\n" 
   
   assert get_response.text == expected_report

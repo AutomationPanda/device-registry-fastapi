@@ -204,12 +204,12 @@ def get_devices_id_report(device_id: int, username: str = Depends(get_current_us
 
   report = BytesIO()
   report.write(bytes(f'ID: {device_id}\n', 'ascii'))
+  report.write(bytes(f'Owner: {device["owner"]}\n', 'ascii'))
   report.write(bytes(f'Name: {device["name"]}\n', 'ascii'))
   report.write(bytes(f'Location: {device["location"]}\n', 'ascii'))
   report.write(bytes(f'Type: {device["type"]}\n', 'ascii'))
   report.write(bytes(f'Model: {device["model"]}\n', 'ascii'))
   report.write(bytes(f'Serial Number: {device["serial_number"]}\n', 'ascii'))
-  report.write(bytes(f'Owner: {device["owner"]}\n', 'ascii'))
   report.seek(0)
 
   report_length = str(report.getbuffer().nbytes)
