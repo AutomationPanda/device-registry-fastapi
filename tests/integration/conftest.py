@@ -175,9 +175,9 @@ def devices(device_creator, session, thermostat_data, light_data, fridge_data):
   light = device_creator.create(session, light_data)
   fridge = device_creator.create(session, fridge_data)
   
-  devices = list()
-  devices.append(thermostat)
-  devices.append(light)
-  devices.append(fridge)
+  records = list()
+  records.append(thermostat)
+  records.append(light)
+  records.append(fridge)
   
-  return devices
+  return records
