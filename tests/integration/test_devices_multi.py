@@ -16,24 +16,6 @@ from testlib.devices import verify_devices
 
 
 # --------------------------------------------------------------------------------
-# Fixtures
-# --------------------------------------------------------------------------------
-
-@pytest.fixture
-def devices(device_creator, session, thermostat_data, light_data, fridge_data):
-  thermostat = device_creator.create(session, thermostat_data)
-  light = device_creator.create(session, light_data)
-  fridge = device_creator.create(session, fridge_data)
-  
-  devices = list()
-  devices.append(thermostat)
-  devices.append(light)
-  devices.append(fridge)
-  
-  return devices
-
-
-# --------------------------------------------------------------------------------
 # Tests for Multiple Devices
 # --------------------------------------------------------------------------------
 
