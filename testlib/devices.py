@@ -13,32 +13,37 @@ import warnings
 # Verification Functions
 # --------------------------------------------------------------------------------
 
-def verify_devices(actual_list, including=None, excluding=None):
-  
-  # Set lists if not given
-  if not including:
-    including = list()
-  if not excluding:
-    excluding = list()
+def verify_owner(actual_devices, expected_owner):
 
-  # Verify the device count
-  assert len(actual_list) >= len(including)
+  # Verify the owner of each device
+  for device in actual_devices:
+    assert device['owner'] == expected_owner
+
+
+def verify_included(actual_devices, included_devices):
 
   # Create a mapping of IDs to data for actual devices
   # This will make verifications much more efficient
-  actual_map = {device['id']: device for device in actual_list}
+  actual_map = {device['id']: device for device in actual_devices}
 
   # Verify each expected device is in the actual list
   # Note that other devices could also be in the actual list, and that's okay
-  for included in including:
+  for included in included_devices:
     assert included['id'] in actual_map
     actual = actual_map[included['id']]
     assert actual == included
-  
+
+
+def verify_excluded(actual_devices, excluded_ids):
+
+  # Create a mapping of IDs to data for actual devices
+  # This will make verifications much more efficient
+  actual_map = {device['id']: device for device in actual_devices}
+
   # Verify excluded device IDs are not in the actual list
-  for excluded in excluding:
+  for excluded in excluded_ids:
     assert excluded not in actual_map
-      
+
 
 # --------------------------------------------------------------------------------
 # Class: DeviceCreator

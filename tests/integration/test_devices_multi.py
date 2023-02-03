@@ -12,28 +12,14 @@ Therefore, test assertions must check only what is covered by the test.
 
 import pytest
 
-from testlib.devices import verify_devices
+from testlib.devices import verify_owner, verify_included, verify_excluded
 
 
 # --------------------------------------------------------------------------------
 # Tests for Multiple Devices
 # --------------------------------------------------------------------------------
 
-# def test_multiple_device_creation(base_url, session, devices):
-#   url = base_url.concat('/devices')
-#   get_response = session.get(url)
-#   get_data = get_response.json()
-
-#   assert get_response.status_code == 200
-#   assert isinstance(get_data, list)
-
-#   get_id = lambda x: x['id']
-#   actual_devices = sorted(get_data, key=get_id)
-#   expected_devices = sorted(devices, key=get_id)
-#   assert actual_devices == expected_devices
-
-
-def test_multiple_device_creation(base_url, session, devices):
+def test_multiple_device_retrieval(base_url, session, devices):
 
   # Get all devices
   url = base_url.concat('/devices')
@@ -43,7 +29,8 @@ def test_multiple_device_creation(base_url, session, devices):
   # Verify all devices
   assert get_response.status_code == 200
   assert isinstance(get_data, list)
-  verify_devices(get_data, devices)
+  verify_owner(get_data, devices[0]['owner'])
+  verify_included(get_data, devices)
 
 
 def test_delete_device_from_multiple(base_url, session, devices, device_creator):
@@ -70,7 +57,8 @@ def test_delete_device_from_multiple(base_url, session, devices, device_creator)
   # Verify all devices
   assert get_response.status_code == 200
   assert isinstance(get_data, list)
-  verify_devices(get_data, devices)
+  verify_included(get_data, devices)
+  verify_excluded(get_data, [id_to_delete])
 
 
 @pytest.mark.parametrize(
@@ -95,9 +83,8 @@ def test_devices_with_query_parameters(base_url, session, thermostat, light, fri
   assert isinstance(get_data, list)
 
   # Verify that the response has only the target device
-  expected_list = [light]
-  excluding = [thermostat['id'], fridge['id']]
-  verify_devices(get_data, expected_list, excluding)
+  verify_included(get_data, [light])
+  verify_excluded(get_data, [thermostat['id'], fridge['id']])
   
 
 def test_devices_with_invalid_query_parameters_ignored(base_url, session, devices):
@@ -110,7 +97,7 @@ def test_devices_with_invalid_query_parameters_ignored(base_url, session, device
   # Verify response and devices
   assert get_response.status_code == 200
   assert isinstance(get_data, list)
-  verify_devices(get_data, devices)
+  verify_included(get_data, devices)
 
 
 def test_devices_with_multiple_query_parameters(base_url, session, thermostat, light, fridge):
@@ -126,9 +113,8 @@ def test_devices_with_multiple_query_parameters(base_url, session, thermostat, l
   assert isinstance(get_data, list)
 
   # Verify that the response has only the target device
-  expected_list = [light]
-  excluding = [thermostat['id'], fridge['id']]
-  verify_devices(get_data, expected_list, excluding)
+  verify_included(get_data, [light])
+  verify_excluded(get_data, [thermostat['id'], fridge['id']])
 
 
 def test_devices_with_multiple_query_parameters_matching_no_device(base_url, session, devices):
