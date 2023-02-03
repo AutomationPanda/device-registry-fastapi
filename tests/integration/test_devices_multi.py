@@ -45,10 +45,6 @@ def test_delete_device_from_multiple(base_url, session, devices, device_creator)
   assert delete_response.status_code == 200
   assert not delete_data
 
-  # Mark device as deleted
-  device_creator.remove(id_to_delete)
-  del devices[1]
-
   # Get all devices
   url = base_url.concat('/devices')
   get_response = session.get(url)
@@ -57,8 +53,12 @@ def test_delete_device_from_multiple(base_url, session, devices, device_creator)
   # Verify all devices
   assert get_response.status_code == 200
   assert isinstance(get_data, list)
+  del devices[1]
   verify_included(get_data, devices)
   verify_excluded(get_data, [id_to_delete])
+
+  # Mark device as deleted
+  device_creator.remove(id_to_delete)
 
 
 @pytest.mark.parametrize(
