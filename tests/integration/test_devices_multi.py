@@ -84,11 +84,7 @@ def test_delete_device_from_multiple(base_url, session, devices, device_creator)
     ('serial_number', 'GL64B-99987')
   ]
 )
-def test_devices_with_query_parameters(base_url, session, devices, parameter, value):
-
-  # If testing ID, get its value from the created devices
-  if parameter == 'id':
-    value = devices[1]['id']
+def test_devices_with_query_parameters(base_url, session, thermostat, light, fridge, parameter, value):
 
   # Get all devices
   url = base_url.concat('/devices')
@@ -100,8 +96,8 @@ def test_devices_with_query_parameters(base_url, session, devices, parameter, va
   assert isinstance(get_data, list)
 
   # Verify that the response has only the target device
-  expected_list = [devices[1]]
-  excluding = [devices[0]['id'], devices[2]['id']]
+  expected_list = [light]
+  excluding = [thermostat['id'], fridge['id']]
   verify_devices(get_data, expected_list, excluding)
   
 
@@ -118,7 +114,7 @@ def test_devices_with_invalid_query_parameters_ignored(base_url, session, device
   verify_devices(get_data, devices)
 
 
-def test_devices_with_multiple_query_parameters(base_url, session, devices):
+def test_devices_with_multiple_query_parameters(base_url, session, thermostat, light, fridge):
 
   # Get all devices
   url = base_url.concat('/devices')
@@ -131,8 +127,8 @@ def test_devices_with_multiple_query_parameters(base_url, session, devices):
   assert isinstance(get_data, list)
 
   # Verify that the response has only the target device
-  expected_list = [devices[1]]
-  excluding = [devices[0]['id'], devices[2]['id']]
+  expected_list = [light]
+  excluding = [thermostat['id'], fridge['id']]
   verify_devices(get_data, expected_list, excluding)
 
 

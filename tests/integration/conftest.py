@@ -170,14 +170,15 @@ def thermostat(device_creator, session, thermostat_data):
 
 
 @pytest.fixture
-def devices(device_creator, session, thermostat_data, light_data, fridge_data):
-  thermostat = device_creator.create(session, thermostat_data)
-  light = device_creator.create(session, light_data)
-  fridge = device_creator.create(session, fridge_data)
-  
-  records = list()
-  records.append(thermostat)
-  records.append(light)
-  records.append(fridge)
-  
-  return records
+def light(device_creator, session, light_data):
+  return device_creator.create(session, light_data)
+
+
+@pytest.fixture
+def fridge(device_creator, session, fridge_data):
+  return device_creator.create(session, fridge_data)
+
+
+@pytest.fixture
+def devices(thermostat, light, fridge):
+  return [thermostat, light, fridge]
