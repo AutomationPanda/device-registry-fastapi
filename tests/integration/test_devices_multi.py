@@ -21,17 +21,16 @@ from testlib.devices import verify_devices
 
 # def test_multiple_device_creation(base_url, session, devices):
 #   url = base_url.concat('/devices')
-#   response = session.get(url)
-#   data = response.json()
+#   get_response = session.get(url)
+#   get_data = get_response.json()
 
-#   assert response.status_code == 200
-#   assert isinstance(data, list)
+#   assert get_response.status_code == 200
+#   assert isinstance(get_data, list)
 
-#   actual_devices = sorted(data, key=lambda x: x['id'])
-#   assert len(actual_devices) == len(devices)
-
-#   for i in range(len(actual_devices)):
-#     verify_device_data(actual_devices[i], devices[i])
+#   get_id = lambda x: x['id']
+#   actual_devices = sorted(get_data, key=get_id)
+#   expected_devices = sorted(devices, key=get_id)
+#   assert actual_devices == expected_devices
 
 
 def test_multiple_device_creation(base_url, session, devices):
