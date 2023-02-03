@@ -29,8 +29,8 @@ def test_multiple_device_retrieval(base_url, session, devices):
   # Verify all devices
   assert get_response.status_code == 200
   assert isinstance(get_data, list)
-  verify_owner(get_data, devices[0]['owner'])
   verify_included(get_data, devices)
+  verify_owner(get_data, devices[0]['owner'])
 
 
 def test_delete_device_from_multiple(base_url, session, devices, device_creator):

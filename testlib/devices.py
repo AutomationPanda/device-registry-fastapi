@@ -13,13 +13,6 @@ import warnings
 # Verification Functions
 # --------------------------------------------------------------------------------
 
-def verify_owner(actual_devices, expected_owner):
-
-  # Verify the owner of each device
-  for device in actual_devices:
-    assert device['owner'] == expected_owner
-
-
 def verify_included(actual_devices, included_devices):
 
   # Create a mapping of IDs to data for actual devices
@@ -43,6 +36,13 @@ def verify_excluded(actual_devices, excluded_ids):
   # Verify excluded device IDs are not in the actual list
   for excluded in excluded_ids:
     assert excluded not in actual_map
+
+
+def verify_owner(actual_devices, expected_owner):
+
+  # Verify the owner of each device
+  for device in actual_devices:
+    assert device['owner'] == expected_owner
 
 
 # --------------------------------------------------------------------------------
