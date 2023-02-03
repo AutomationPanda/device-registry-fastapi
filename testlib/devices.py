@@ -21,10 +21,10 @@ def verify_included(actual_devices, included_devices):
 
   # Verify each expected device is in the actual list
   # Note that other devices could also be in the actual list, and that's okay
-  for included in included_devices:
-    assert included['id'] in actual_map
-    actual = actual_map[included['id']]
-    assert actual == included
+  for expected in included_devices:
+    assert expected['id'] in actual_map
+    actual = actual_map[expected['id']]
+    assert actual == expected
 
 
 def verify_excluded(actual_devices, excluded_ids):
