@@ -12,7 +12,7 @@ Therefore, test assertions must check only what is covered by the test.
 
 import pytest
 
-from testlib.devices import verify_owner, verify_included, verify_excluded
+from testlib.devices import verify_included, verify_excluded, verify_owner
 
 
 # --------------------------------------------------------------------------------
