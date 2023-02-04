@@ -12,7 +12,7 @@ In a risk-based approach, it might be better to cover only a few endpoints.
 
 import requests
 
-from testlib.devices import verify_excluded
+from testlib.devices import verify_value
 
 
 # --------------------------------------------------------------------------------
@@ -153,7 +153,7 @@ def test_user_authorization_for_device_report(base_url, alt_session, thermostat)
   assert get_data['detail'] == 'Forbidden'
 
 
-def test_user_authorization_for_devices_get_list(base_url, alt_session, thermostat):
+def test_user_authorization_for_devices_get_list(base_url, alt_user, alt_session, devices):
   
   # Get all devices
   device_id_url = base_url.concat(f'/devices/')
@@ -163,4 +163,4 @@ def test_user_authorization_for_devices_get_list(base_url, alt_session, thermost
   # Verify the user's device is NOT in the alt_user's list
   assert get_response.status_code == 200
   assert isinstance(get_data, list)
-  verify_excluded(get_data, [thermostat['id']])
+  verify_value(get_data, 'owner', alt_user.username)
