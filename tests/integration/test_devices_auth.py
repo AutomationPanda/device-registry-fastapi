@@ -152,3 +152,15 @@ def test_user_authorization_for_devices_delete(base_url, alt_session, thermostat
   # Verify error
   assert get_response.status_code == 403
   assert get_data['detail'] == 'Forbidden'
+
+
+def test_user_authorization_for_device_report(base_url, alt_session, thermostat):
+  
+  # Attempt retrieve
+  device_id_url = base_url.concat(f'/devices/{thermostat["id"]}/report')
+  get_response = alt_session.get(device_id_url)
+  get_data = get_response.json()
+
+  # Verify error
+  assert get_response.status_code == 403
+  assert get_data['detail'] == 'Forbidden'
