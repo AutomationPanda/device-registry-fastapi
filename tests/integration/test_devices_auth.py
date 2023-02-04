@@ -93,19 +93,6 @@ def test_devices_get_with_invalid_token(base_url, auth_token):
 # Authorization Tests
 # --------------------------------------------------------------------------------
 
-def test_user_authorization_for_devices_get_list(base_url, alt_session, thermostat):
-  
-  # Get all devices
-  device_id_url = base_url.concat(f'/devices/')
-  get_response = alt_session.get(device_id_url)
-  get_data = get_response.json()
-
-  # Verify the user's device is NOT in the alt_user's list
-  assert get_response.status_code == 200
-  assert isinstance(get_data, list)
-  verify_excluded(get_data, [thermostat['id']])
-
-
 def test_user_authorization_for_devices_get_by_id(base_url, alt_session, thermostat):
   
   # Attempt retrieve
@@ -164,3 +151,16 @@ def test_user_authorization_for_device_report(base_url, alt_session, thermostat)
   # Verify error
   assert get_response.status_code == 403
   assert get_data['detail'] == 'Forbidden'
+
+
+def test_user_authorization_for_devices_get_list(base_url, alt_session, thermostat):
+  
+  # Get all devices
+  device_id_url = base_url.concat(f'/devices/')
+  get_response = alt_session.get(device_id_url)
+  get_data = get_response.json()
+
+  # Verify the user's device is NOT in the alt_user's list
+  assert get_response.status_code == 200
+  assert isinstance(get_data, list)
+  verify_excluded(get_data, [thermostat['id']])
