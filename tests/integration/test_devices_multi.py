@@ -12,7 +12,7 @@ Therefore, test assertions must check only what is covered by the test.
 
 import pytest
 
-from testlib.devices import verify_included, verify_excluded, verify_owner
+from testlib.devices import verify_included, verify_excluded, verify_value
 
 
 # --------------------------------------------------------------------------------
@@ -30,7 +30,7 @@ def test_multiple_device_retrieval(base_url, session, devices):
   assert get_response.status_code == 200
   assert isinstance(get_data, list)
   verify_included(get_data, devices)
-  verify_owner(get_data, devices[0]['owner'])
+  verify_value(get_data, 'owner', devices[0]['owner'])
 
 
 def test_delete_device_from_multiple(base_url, session, devices, device_creator):
@@ -71,7 +71,7 @@ def test_delete_device_from_multiple(base_url, session, devices, device_creator)
     ('serial_number', 'GL64B-99987')
   ]
 )
-def test_devices_with_query_parameters(base_url, session, thermostat, light, fridge, parameter, value):
+def test_devices_with_query_parameters(base_url, session, devices, parameter, value):
 
   # Get all devices
   url = base_url.concat('/devices')
@@ -83,8 +83,8 @@ def test_devices_with_query_parameters(base_url, session, thermostat, light, fri
   assert isinstance(get_data, list)
 
   # Verify that the response has only the target device
-  verify_included(get_data, [light])
-  verify_excluded(get_data, [thermostat['id'], fridge['id']])
+  assert len(get_data) > 0
+  verify_value(get_data, parameter, value)
   
 
 def test_devices_with_invalid_query_parameters_ignored(base_url, session, devices):
@@ -100,7 +100,7 @@ def test_devices_with_invalid_query_parameters_ignored(base_url, session, device
   verify_included(get_data, devices)
 
 
-def test_devices_with_multiple_query_parameters(base_url, session, thermostat, light, fridge):
+def test_devices_with_multiple_query_parameters(base_url, session, devices):
 
   # Get all devices
   url = base_url.concat('/devices')
@@ -113,8 +113,9 @@ def test_devices_with_multiple_query_parameters(base_url, session, thermostat, l
   assert isinstance(get_data, list)
 
   # Verify that the response has only the target device
-  verify_included(get_data, [light])
-  verify_excluded(get_data, [thermostat['id'], fridge['id']])
+  assert len(get_data) > 0
+  verify_value(get_data, 'name', 'Front Porch Light')
+  verify_value(get_data, 'location', 'Front Porch')
 
 
 def test_devices_with_multiple_query_parameters_matching_no_device(base_url, session, devices):

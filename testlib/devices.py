@@ -38,11 +38,11 @@ def verify_excluded(actual_devices, excluded_ids):
     assert excluded not in actual_map
 
 
-def verify_owner(actual_devices, expected_owner):
+def verify_value(actual_devices, field, expected_value):
 
-  # Verify the owner of each device
+  # Verify the field for each device
   for device in actual_devices:
-    assert device['owner'] == expected_owner
+    assert device[field] == expected_value
 
 
 # --------------------------------------------------------------------------------
